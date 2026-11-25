@@ -1,23 +1,68 @@
+import { useState } from "react";
+import { nombreCategoria } from "../data/productos";
+
+const iconosCategoria = {
+    bebidas: "🥤",
+    lacteos: "🥛",
+    panaderia: "🥐",
+    abarrotes: "🛒",
+    botanas: "🍿",
+    dulces: "🍬",
+    limpieza: "🧼",
+    higiene: "🪥",
+};
+
 function ProductCard({ producto, agregarProducto }) {
+    const [imagenNoDisponible, setImagenNoDisponible] = useState(false);
 
     return (
-        
-        <div className="product-card">
-  <div className="product-card__image" aria-hidden="true">🥤</div>
+        <article className="product-card">
+            <div className="product-card__image">
+                {imagenNoDisponible ? (
+                    <span
+                        className="product-card__image--placeholder"
+                        role="img"
+                        aria-label={`Imagen pendiente: ${producto.nombre}`}
+                    >
+                        {iconosCategoria[producto.categoria] || "🛍️"}
+                    </span>
+                ) : (
+                    <img
+                        src={producto.imagen}
+                        alt={producto.nombre}
+                        loading="lazy"
+                        onError={() => setImagenNoDisponible(true)}
+                    />
+                )}
+                <span
+                    className={`availability-badge ${
+                        producto.disponible ? "" : "availability-badge--unavailable"
+                    }`}
+                >
+                    {producto.disponible ? "Disponible" : "Agotado"}
+                </span>
+            </div>
 
-  <div className="product-card__details">
-    <div>
-      <h3>{producto.nombre}</h3>
-      <p>{producto.descripcion}</p>
-    </div>
-    <p className="p-precio">${producto.precio.toFixed(2)}</p>
-  </div>
+            <div className="product-card__details">
+                <div>
+                    <p className="product-card__category">
+                        {nombreCategoria(producto.categoria)}
+                    </p>
+                    <h3>{producto.nombre}</h3>
+                    <p className="product-card__description">{producto.descripcion}</p>
+                </div>
+                <p className="p-precio">${producto.precio.toFixed(2)}</p>
+            </div>
 
-  <button onClick={() => agregarProducto(producto)}>
-    Agregar al Carrito
-  </button>
-</div>
-
+            <button
+                className="product-card__button"
+                type="button"
+                onClick={() => agregarProducto(producto)}
+                disabled={!producto.disponible}
+            >
+                {producto.disponible ? "Agregar al carrito" : "No disponible"}
+            </button>
+        </article>
     );
 }
 

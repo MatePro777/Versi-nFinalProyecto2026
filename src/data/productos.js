@@ -13,7 +13,7 @@ const producto = [
     descripcion: "Refresco de cola sin azúcar de 600 ml",
     categoria: "bebidas",
     precio: 18,
-    disponible: true
+    disponible: false
   },
   {
     id: 3,
@@ -117,7 +117,7 @@ const producto = [
     descripcion: "Leche entera pasteurizada de 1 litro",
     categoria: "lacteos",
     precio: 29,
-    disponible: true
+    disponible: false
   },
   {
     id: 16,
@@ -181,7 +181,7 @@ const producto = [
     descripcion: "Paquete con 4 piezas",
     categoria: "panaderia",
     precio: 28,
-    disponible: true
+    disponible: false
   },
   {
     id: 24,
@@ -293,7 +293,7 @@ const producto = [
     descripcion: "Cacahuates tostados con sal",
     categoria: "botanas",
     precio: 18,
-    disponible: true
+    disponible: false
   },
   {
     id: 38,
@@ -365,7 +365,7 @@ const producto = [
     descripcion: "Detergente para lavar ropa",
     categoria: "limpieza",
     precio: 28,
-    disponible: true
+    disponible: false
   },
   {
     id: 47,
@@ -397,7 +397,7 @@ const producto = [
     descripcion: "Shampoo para uso diario",
     categoria: "higiene",
     precio: 45,
-    disponible: true
+    disponible: false
   },
   {
     id: 51,
@@ -409,4 +409,72 @@ const producto = [
   }
 ];
 
-export default producto;
+export const categorias = [...new Set(producto.map((item) => item.categoria))];
+
+export function nombreCategoria(categoria) {
+  const nombres = {
+    lacteos: "Lácteos",
+    panaderia: "Panadería",
+  };
+
+  return nombres[categoria] || categoria.charAt(0).toUpperCase() + categoria.slice(1);
+}
+
+const imagenesPorProducto = {
+  1: "https://images.pexels.com/photos/35020136/pexels-photo-35020136.jpeg?auto=compress&cs=tinysrgb&w=640",
+  2: "https://images.pexels.com/photos/19504042/pexels-photo-19504042.jpeg?auto=compress&cs=tinysrgb&w=640",
+  3: "https://images.pexels.com/photos/7196433/pexels-photo-7196433.jpeg?auto=compress&cs=tinysrgb&w=640",
+  4: "https://images.pexels.com/photos/7073594/pexels-photo-7073594.jpeg?auto=compress&cs=tinysrgb&w=640",
+  5: "https://images.openfoodfacts.org/images/products/750/102/201/3052/front_en.12.400.jpg",
+  6: "https://images.pexels.com/photos/13599788/pexels-photo-13599788.jpeg?auto=compress&cs=tinysrgb&w=640",
+  7: "https://images.pexels.com/photos/4161715/pexels-photo-4161715.jpeg?auto=compress&cs=tinysrgb&w=640",
+  8: "https://images.pexels.com/photos/39154626/pexels-photo-39154626.jpeg?auto=compress&cs=tinysrgb&w=640",
+  9: "https://images.openfoodfacts.org/images/products/009/047/800/0848/front_es.3.400.jpg",
+  10: "https://i5.walmartimages.com.mx/gr/images/product-images/img_large/00750105533998L.jpg",
+  11: "https://images.pexels.com/photos/35020123/pexels-photo-35020123.jpeg?auto=compress&cs=tinysrgb&w=640",
+  12: "https://images.pexels.com/photos/3737800/pexels-photo-3737800.jpeg?auto=compress&cs=tinysrgb&w=640",
+  13: "https://images.pexels.com/photos/14510445/pexels-photo-14510445.jpeg?auto=compress&cs=tinysrgb&w=640",
+  14: "https://images.pexels.com/photos/8453561/pexels-photo-8453561.jpeg?auto=compress&cs=tinysrgb&w=640",
+  15: "https://images.pexels.com/photos/4578396/pexels-photo-4578396.jpeg?auto=compress&cs=tinysrgb&w=640",
+  16: "https://images.pexels.com/photos/5946755/pexels-photo-5946755.jpeg?auto=compress&cs=tinysrgb&w=640",
+  17: "https://images.pexels.com/photos/1098758/pexels-photo-1098758.jpeg?auto=compress&cs=tinysrgb&w=640",
+  18: "https://images.pexels.com/photos/13466256/pexels-photo-13466256.jpeg?auto=compress&cs=tinysrgb&w=640",
+  19: "https://images.pexels.com/photos/11115801/pexels-photo-11115801.jpeg?auto=compress&cs=tinysrgb&w=640",
+  20: "https://images.pexels.com/photos/40193381/pexels-photo-40193381.jpeg?auto=compress&cs=tinysrgb&w=640",
+  21: "https://images.pexels.com/photos/1070465/pexels-photo-1070465.jpeg?auto=compress&cs=tinysrgb&w=640",
+  22: "https://images.pexels.com/photos/28354523/pexels-photo-28354523.jpeg?auto=compress&cs=tinysrgb&w=640",
+  23: "https://images.pexels.com/photos/17119614/pexels-photo-17119614.png?auto=compress&cs=tinysrgb&w=640",
+  24: "https://images.pexels.com/photos/30822876/pexels-photo-30822876.jpeg?auto=compress&cs=tinysrgb&w=640",
+  25: "https://images.pexels.com/photos/5737825/pexels-photo-5737825.jpeg?auto=compress&cs=tinysrgb&w=640",
+  26: "https://images.pexels.com/photos/31555431/pexels-photo-31555431.jpeg?auto=compress&cs=tinysrgb&w=640",
+  27: "https://images.pexels.com/photos/31672561/pexels-photo-31672561.jpeg?auto=compress&cs=tinysrgb&w=640",
+  28: "https://images.pexels.com/photos/37105582/pexels-photo-37105582.jpeg?auto=compress&cs=tinysrgb&w=640",
+  29: "https://images.pexels.com/photos/992820/pexels-photo-992820.jpeg?auto=compress&cs=tinysrgb&w=640",
+  30: "https://images.pexels.com/photos/7599053/pexels-photo-7599053.jpeg?auto=compress&cs=tinysrgb&w=640",
+  31: "https://images.pexels.com/photos/5987887/pexels-photo-5987887.jpeg?auto=compress&cs=tinysrgb&w=640",
+  32: "https://images.pexels.com/photos/14426299/pexels-photo-14426299.jpeg?auto=compress&cs=tinysrgb&w=640",
+  33: "https://images.pexels.com/photos/33775646/pexels-photo-33775646.jpeg?auto=compress&cs=tinysrgb&w=640",
+  34: "https://images.pexels.com/photos/39056589/pexels-photo-39056589.jpeg?auto=compress&cs=tinysrgb&w=640",
+  35: "https://images.pexels.com/photos/13060679/pexels-photo-13060679.jpeg?auto=compress&cs=tinysrgb&w=640",
+  36: "https://images.pexels.com/photos/7033652/pexels-photo-7033652.jpeg?auto=compress&cs=tinysrgb&w=640",
+  37: "https://images.pexels.com/photos/35237495/pexels-photo-35237495.jpeg?auto=compress&cs=tinysrgb&w=640",
+  38: "https://images.pexels.com/photos/10234160/pexels-photo-10234160.jpeg?auto=compress&cs=tinysrgb&w=640",
+  39: "https://images.pexels.com/photos/31116124/pexels-photo-31116124.jpeg?auto=compress&cs=tinysrgb&w=640",
+  40: "https://images.pexels.com/photos/36134940/pexels-photo-36134940.jpeg?auto=compress&cs=tinysrgb&w=640",
+  41: "https://images.pexels.com/photos/12941393/pexels-photo-12941393.jpeg?auto=compress&cs=tinysrgb&w=640",
+  42: "https://images.pexels.com/photos/1280730/pexels-photo-1280730.jpeg?auto=compress&cs=tinysrgb&w=640",
+  43: "https://images.pexels.com/photos/539447/pexels-photo-539447.jpeg?auto=compress&cs=tinysrgb&w=640",
+  44: "https://images.pexels.com/photos/12436390/pexels-photo-12436390.jpeg?auto=compress&cs=tinysrgb&w=640",
+  45: "https://images.pexels.com/photos/13872556/pexels-photo-13872556.jpeg?auto=compress&cs=tinysrgb&w=640",
+  46: "https://images.pexels.com/photos/5591837/pexels-photo-5591837.jpeg?auto=compress&cs=tinysrgb&w=640",
+  47: "https://images.pexels.com/photos/7351645/pexels-photo-7351645.jpeg?auto=compress&cs=tinysrgb&w=640",
+  48: "https://images.pexels.com/photos/3958192/pexels-photo-3958192.jpeg?auto=compress&cs=tinysrgb&w=640",
+  49: "https://images.pexels.com/photos/14456100/pexels-photo-14456100.jpeg?auto=compress&cs=tinysrgb&w=640",
+  50: "https://images.pexels.com/photos/13006788/pexels-photo-13006788.jpeg?auto=compress&cs=tinysrgb&w=640",
+  51: "https://images.pexels.com/photos/30723567/pexels-photo-30723567.jpeg?auto=compress&cs=tinysrgb&w=640",
+};
+
+export default producto.map((item) => ({
+  ...item,
+  imagen: imagenesPorProducto[item.id],
+}));

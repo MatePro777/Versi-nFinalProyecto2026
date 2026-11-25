@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cambio from "./Cambio";
 import Carrito from "./Carrito";
 
@@ -10,8 +10,25 @@ function Header({
   disminuir,
   eliminar,
   total,
+  finalizarCompra,
+  mensajeCompra,
 }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const cantidadProductos = carrito.reduce(
+    (cantidad, item) => cantidad + item.cantidad,
+    0
+  );
+
+  useEffect(() => {
+    if (!menuAbierto) return undefined;
+
+    function cerrarConEscape(evento) {
+      if (evento.key === "Escape") setMenuAbierto(false);
+    }
+
+    window.addEventListener("keydown", cerrarConEscape);
+    return () => window.removeEventListener("keydown", cerrarConEscape);
+  }, [menuAbierto]);
 
   return (
     <>
@@ -37,24 +54,39 @@ function Header({
             aria-controls="side-menu"
             onClick={() => setMenuAbierto((abierto) => !abierto)}
           >
-            Carrito ({carrito.reduce((cantidad, item) => cantidad + item.cantidad, 0)})
+            Carrito <span className="cart-count">{cantidadProductos}</span>
           </button>
         </div>
       </header>
 
-      <aside
-        id="side-menu"
-        className={`side-menu ${menuAbierto ? "side-menu--open" : ""}`}
-        aria-hidden={!menuAbierto}
-      >
-        <Carrito
-          carrito={carrito}
-          aumentar={aumentar}
-          disminuir={disminuir}
-          eliminar={eliminar}
-          total={total}
-        />
-      </aside>
+      {menuAbierto && (
+        <>
+          <button
+            className="cart-backdrop"
+            type="button"
+            aria-label="Cerrar carrito"
+            onClick={() => setMenuAbierto(false)}
+          />
+          <aside
+            id="side-menu"
+            className="side-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cart-title"
+          >
+            <Carrito
+              carrito={carrito}
+              aumentar={aumentar}
+              disminuir={disminuir}
+              eliminar={eliminar}
+              total={total}
+              cerrar={() => setMenuAbierto(false)}
+              finalizarCompra={finalizarCompra}
+              mensajeCompra={mensajeCompra}
+            />
+          </aside>
+        </>
+      )}
     </>
   );
 }

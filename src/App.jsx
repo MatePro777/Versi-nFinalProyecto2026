@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./App.css";
 import Header from "./components/Header";
-import Carrito from "./components/Carrito";
 import Footer from "./components/Footer";
 import Catalogo from "./pages/Catalogo";
 import Home from "./pages/Home";
@@ -9,8 +8,12 @@ import Home from "./pages/Home";
 function App() {
     const [paginaActual, setPaginaActual] = useState("home");
     const [carrito, setCarrito] = useState([]);
+    const [mensajeCompra, setMensajeCompra] = useState("");
 
     function agregarProducto(producto) {
+        if (!producto.disponible) return;
+
+        setMensajeCompra("");
         setCarrito((actual) => {
             const existente = actual.find((item) => item.id === producto.id);
             if (existente) {
@@ -23,6 +26,13 @@ function App() {
 
             return [...actual, { ...producto, cantidad: 1 }];
         });
+    }
+
+    function finalizarCompra() {
+        if (carrito.length === 0 || carrito.some((item) => !item.disponible)) return;
+
+        setCarrito([]);
+        setMensajeCompra("¡Compra realizada! Gracias por apoyar a EL LIRIO.");
     }
 
     function aumentar(id) {
@@ -62,6 +72,8 @@ function App() {
                 disminuir={disminuir}
                 eliminar={eliminar}
                 total={total}
+                finalizarCompra={finalizarCompra}
+                mensajeCompra={mensajeCompra}
             />
             
             <main>
