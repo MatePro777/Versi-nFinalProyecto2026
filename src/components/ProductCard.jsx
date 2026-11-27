@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { nombreCategoria } from "../data/productos";
+import { nombreCategoria, precioConOferta } from "../data/productos";
 
 const iconosCategoria = {
     bebidas: "🥤",
@@ -41,6 +41,9 @@ function ProductCard({ producto, agregarProducto }) {
                 >
                     {producto.disponible ? "Disponible" : "Agotado"}
                 </span>
+                {producto.oferta && (
+                    <span className="offer-badge">-{producto.oferta}%</span>
+                )}
             </div>
 
             <div className="product-card__details">
@@ -51,7 +54,14 @@ function ProductCard({ producto, agregarProducto }) {
                     <h3>{producto.nombre}</h3>
                     <p className="product-card__description">{producto.descripcion}</p>
                 </div>
-                <p className="p-precio">${producto.precio.toFixed(2)}</p>
+                <p className="p-precio">
+                    {producto.oferta && (
+                        <span className="p-precio__original">
+                            ${producto.precio.toFixed(2)}
+                        </span>
+                    )}
+                    <span>${precioConOferta(producto).toFixed(2)}</span>
+                </p>
             </div>
 
             <button

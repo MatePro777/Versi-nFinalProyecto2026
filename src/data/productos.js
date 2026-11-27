@@ -5,6 +5,7 @@ const producto = [
     descripcion: "Refresco de cola de 600 ml",
     categoria: "bebidas",
     precio: 18,
+    oferta: 15,
     disponible: true
   },
   {
@@ -29,6 +30,7 @@ const producto = [
     descripcion: "Refresco de cola de 600 ml",
     categoria: "bebidas",
     precio: 17,
+    oferta: 10,
     disponible: true
   },
   {
@@ -85,6 +87,7 @@ const producto = [
     descripcion: "Agua natural embotellada de 1 litro",
     categoria: "bebidas",
     precio: 14,
+    oferta: 15,
     disponible: true
   },
   {
@@ -109,6 +112,7 @@ const producto = [
     descripcion: "Bebida de mango en envase de 500 ml",
     categoria: "bebidas",
     precio: 14,
+    oferta: 10,
     disponible: true
   },
   {
@@ -125,6 +129,7 @@ const producto = [
     descripcion: "Leche deslactosada de 1 litro",
     categoria: "lacteos",
     precio: 34,
+    oferta: 10,
     disponible: true
   },
   {
@@ -165,6 +170,7 @@ const producto = [
     descripcion: "Pan blanco rebanado",
     categoria: "panaderia",
     precio: 42,
+    oferta: 15,
     disponible: true
   },
   {
@@ -197,6 +203,7 @@ const producto = [
     descripcion: "Tortillas de maíz recién hechas",
     categoria: "abarrotes",
     precio: 26,
+    oferta: 10,
     disponible: true
   },
   {
@@ -213,6 +220,7 @@ const producto = [
     descripcion: "Frijol negro para cocinar",
     categoria: "abarrotes",
     precio: 38,
+    oferta: 15,
     disponible: true
   },
   {
@@ -277,6 +285,7 @@ const producto = [
     descripcion: "Papas fritas en bolsa individual",
     categoria: "botanas",
     precio: 18,
+    oferta: 10,
     disponible: true
   },
   {
@@ -325,6 +334,7 @@ const producto = [
     descripcion: "Barra de chocolate con leche",
     categoria: "dulces",
     precio: 25,
+    oferta: 15,
     disponible: true
   },
   {
@@ -341,6 +351,7 @@ const producto = [
     descripcion: "Gomitas surtidas sabor frutal",
     categoria: "dulces",
     precio: 16,
+    oferta: 10,
     disponible: true
   },
   {
@@ -373,6 +384,7 @@ const producto = [
     descripcion: "Jabón líquido para trastes",
     categoria: "limpieza",
     precio: 24,
+    oferta: 15,
     disponible: true
   },
   {
@@ -389,6 +401,7 @@ const producto = [
     descripcion: "Pasta dental con flúor",
     categoria: "higiene",
     precio: 29,
+    oferta: 10,
     disponible: true
   },
   {
@@ -410,6 +423,12 @@ const producto = [
 ];
 
 export const categorias = [...new Set(producto.map((item) => item.categoria))];
+
+export function precioConOferta(item) {
+  if (!item.oferta) return item.precio;
+
+  return Math.round(item.precio * (1 - item.oferta / 100) * 100) / 100;
+}
 
 export function nombreCategoria(categoria) {
   const nombres = {

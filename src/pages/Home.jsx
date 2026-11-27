@@ -1,3 +1,12 @@
+const integrantes = [
+  "Mateo Sebastian Cuevas Cerón",
+  "Cesar David Mendoza Zarzoza",
+  "Luis Fernando Castillo Olivera",
+  "Iker Agustin Sanchez Abasolo",
+  "Aldo Yael Anaya Estrada",
+  "Eduardo Alexander Morales Cabrera",
+];
+
 function Home({ cambiarPagina }) {
   return (
     <>
@@ -18,13 +27,15 @@ function Home({ cambiarPagina }) {
           </button>
         </div>
       </section>
-      <section className="team-thanks" aria-labelledby="team-thanks-title">
-        <h2 id="team-thanks-title">Gracias por visitarnos</h2>
-        <p>
-          Proyecto realizado por Mateo Sebastian Cuevas Cerón, Cesar David
-          Mendoza Zarzoza, Luis Fernando Castillo olivera, Iker Agustin Sanchez
-          Abasolo, Aldo Yael Anaya Estrada y Eduardo Alexander Morales Cabrera.
-        </p>
+      <section className="team-thanks agradecimiento" aria-labelledby="team-title">
+        <p className="team-kicker">Hecho con dedicación</p>
+        <h2 id="team-title">Gracias por visitarnos</h2>
+        <p className="team-description">Proyecto realizado por:</p>
+        <ul className="team-list">
+          {integrantes.map((integrante) => (
+            <li key={integrante}>{integrante}</li>
+          ))}
+        </ul>
       </section>
     </>
   );

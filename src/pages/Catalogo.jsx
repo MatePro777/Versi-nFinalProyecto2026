@@ -20,7 +20,10 @@ function Catalogo({ agregarProducto }) {
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "");
             const coincideCategoria =
-                categoriaActual === "todas" || item.categoria === categoriaActual;
+                categoriaActual === "todas" ||
+                (categoriaActual === "ofertas"
+                    ? Boolean(item.oferta)
+                    : item.categoria === categoriaActual);
 
             return coincideCategoria && textoProducto.includes(termino);
         });
@@ -51,6 +54,10 @@ function Catalogo({ agregarProducto }) {
                 categoriaActual={categoriaActual}
                 cambiarCategoria={setCategoriaActual}
             />
+
+            {categoriaActual === "ofertas" && (
+                <p className="offers-intro">Estos son los productos en oferta del día</p>
+            )}
 
             <div className="productos-grid" aria-live="polite">
                 {productosFiltrados.length > 0 ? (

@@ -11,6 +11,16 @@ function Navbar02({ categorias, categoriaActual, cambiarCategoria }) {
             >
                 Todas
             </button>
+            <button
+                className={`category-nav__offers ${
+                    categoriaActual === "ofertas" ? "active" : ""
+                }`}
+                type="button"
+                aria-pressed={categoriaActual === "ofertas"}
+                onClick={() => cambiarCategoria("ofertas")}
+            >
+                Ofertas
+            </button>
             {categorias.map((categoria) => (
                 <button
                     className={categoriaActual === categoria ? "active" : ""}

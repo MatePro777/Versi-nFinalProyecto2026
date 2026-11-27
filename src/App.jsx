@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Catalogo from "./pages/Catalogo";
 import Home from "./pages/Home";
+import { precioConOferta } from "./data/productos";
 
 function App() {
     const [paginaActual, setPaginaActual] = useState("home");
@@ -58,7 +59,7 @@ function App() {
     }
 
     const total = carrito.reduce(
-        (suma, item) => suma + item.precio * item.cantidad,
+        (suma, item) => suma + precioConOferta(item) * item.cantidad,
         0
     );
 

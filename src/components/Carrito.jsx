@@ -1,3 +1,5 @@
+import { precioConOferta } from "../data/productos";
+
 function Carrito({
     carrito,
     aumentar,
@@ -33,8 +35,18 @@ function Carrito({
                     <div className="producto-carrito" key={item.id}>
                         <div className="cart-item-details">
                             <strong>{item.nombre}</strong>
-                            <p>${item.precio.toFixed(2)} c/u</p>
-                            <p>Subtotal: ${(item.precio * item.cantidad).toFixed(2)}</p>
+                            <p>
+                                {item.oferta && (
+                                    <span className="cart-original-price">
+                                        ${item.precio.toFixed(2)}{" "}
+                                    </span>
+                                )}
+                                ${precioConOferta(item).toFixed(2)} c/u
+                            </p>
+                            <p>
+                                Subtotal: $
+                                {(precioConOferta(item) * item.cantidad).toFixed(2)}
+                            </p>
                         </div>
                         <div className="controles">
                             <button
