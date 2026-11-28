@@ -17,4 +17,3 @@ Cada producto tiene su propio enlace de imagen en `src/data/productos.js`;requie
 un icono de categoría.
 
 ## Desarrollo
-ando bien cachondito
