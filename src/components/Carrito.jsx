@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { precioConOferta } from "../data/productos";
 
 function Carrito({
@@ -9,7 +10,12 @@ function Carrito({
     cerrar,
     finalizarCompra,
     mensajeCompra,
+    enlaceWhatsApp,
+    cliente,
+    cambiarDatos,
 }) {
+    const [confirmacionAbierta, setConfirmacionAbierta] = useState(false);
+
     return (
         <section className="seccion-carrito" aria-labelledby="cart-title">
             <header className="cart-heading">
@@ -25,8 +31,25 @@ function Carrito({
             </header>
 
             {mensajeCompra && (
-                <p className="purchase-success" role="status">{mensajeCompra}</p>
+                <div className="purchase-notice" role="status">
+                    <p>{mensajeCompra}</p>
+                    {enlaceWhatsApp && (
+                        <a href={enlaceWhatsApp} target="_blank" rel="noopener noreferrer">
+                            Abrir WhatsApp
+                        </a>
+                    )}
+                </div>
             )}
+
+            <div className="cart-customer">
+                <div>
+                    <strong>{cliente.nombre}</strong>
+                    <p>{cliente.direccion}</p>
+                </div>
+                <button type="button" onClick={cambiarDatos}>
+                    Cambiar datos
+                </button>
+            </div>
 
             {carrito.length === 0 ? (
                 <p className="cart-empty">Tu carrito está vacío.</p>
@@ -84,12 +107,67 @@ function Carrito({
                 <button
                     className="checkout-button"
                     type="button"
-                    onClick={finalizarCompra}
+                    onClick={() => setConfirmacionAbierta(true)}
                     disabled={carrito.length === 0}
                 >
-                    Finalizar compra
+                    Confirmar pedido
                 </button>
             </div>
+
+            {confirmacionAbierta && (
+                <div className="order-confirmation" role="presentation">
+                    <button
+                        className="order-confirmation__backdrop"
+                        type="button"
+                        aria-label="Rechazar y cerrar confirmación"
+                        onClick={() => setConfirmacionAbierta(false)}
+                    />
+                    <section
+                        className="order-confirmation__dialog"
+                        role="alertdialog"
+                        aria-modal="true"
+                        aria-labelledby="order-confirmation-title"
+                        aria-describedby="order-confirmation-description"
+                    >
+                        <h3 id="order-confirmation-title">¿Confirmas este pedido?</h3>
+                        <p id="order-confirmation-description">
+                            El pedido para {cliente.nombre}, con total de ${total.toFixed(2)},
+                            se entregaría en: {cliente.direccion}.
+                        </p>
+                        <ul className="order-confirmation__items">
+                            {carrito.map((item) => (
+                                <li key={item.id}>
+                                    {item.cantidad} × {item.nombre} — $
+                                    {(precioConOferta(item) * item.cantidad).toFixed(2)}
+                                </li>
+                            ))}
+                        </ul>
+                        <p className="order-confirmation__warning">
+                            Se abrirá WhatsApp con el pedido escrito. Revísalo y pulsa
+                            Enviar para compartirlo.
+                        </p>
+                        <div className="order-confirmation__actions">
+                            <button
+                                type="button"
+                                className="order-confirmation__reject"
+                                onClick={() => setConfirmacionAbierta(false)}
+                            >
+                                Rechazar
+                            </button>
+                            <button
+                                type="button"
+                                className="checkout-button"
+                                onClick={() => {
+                                    finalizarCompra();
+                                    setConfirmacionAbierta(false);
+                                }}
+                            >
+                                Aceptar y abrir WhatsApp
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            )}
         </section>
     );
 }

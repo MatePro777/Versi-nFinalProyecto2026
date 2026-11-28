@@ -1,8 +1,10 @@
 import { useEffect as usar_efecto, useState as usar_estado } from "react";
+import { abrirChatWhatsApp, crearEnlaceWhatsApp } from "../utils/whatsapp";
 
-function Footer() {
+function Footer({ telefonoWhatsApp }) {
     const [sugerencias_abiertas, establecer_sugerencias_abiertas] = usar_estado(false);
     const [estado_envio, establecer_estado_envio] = usar_estado("");
+    const [enlace_whatsapp, establecer_enlace_whatsapp] = usar_estado("");
 
     usar_efecto(() => {
         if (!sugerencias_abiertas) return undefined;
@@ -17,12 +19,44 @@ function Footer() {
 
     function abrir_sugerencias() {
         establecer_estado_envio("");
+        establecer_enlace_whatsapp("");
         establecer_sugerencias_abiertas(true);
     }
 
     function preparar_sugerencia(evento) {
         evento.preventDefault();
-        establecer_estado_envio("Formulario completado. Gracias por tu sugerencia.");
+        const formulario = new FormData(evento.currentTarget);
+        const nombre = String(formulario.get("nombre") || "").trim();
+        const grupo = String(formulario.get("grupo") || "").trim();
+        const sugerencia = String(formulario.get("sugerencia") || "").trim();
+
+        if (!nombre || !grupo || !sugerencia) {
+            establecer_estado_envio("Completa todos los campos antes de continuar.");
+            return;
+        }
+
+        const mensaje = [
+            "Hola, quiero compartir una sugerencia para EL LIRIO:",
+            "",
+            `Nombre: ${nombre}`,
+            `Grupo: ${grupo}`,
+            "",
+            "Sugerencia:",
+            sugerencia,
+        ].join("\n");
+        const urlWhatsApp = crearEnlaceWhatsApp(telefonoWhatsApp, mensaje);
+        establecer_enlace_whatsapp(urlWhatsApp);
+
+        if (!abrirChatWhatsApp(urlWhatsApp)) {
+            establecer_estado_envio(
+                "El navegador bloqueó WhatsApp. Permite las ventanas emergentes o usa el enlace de abajo."
+            );
+            return;
+        }
+
+        establecer_estado_envio(
+            "WhatsApp se abrió con tu sugerencia escrita. Revísala y pulsa Enviar."
+        );
     }
 
     return (
@@ -112,13 +146,25 @@ function Footer() {
                                     />
                                 </label>
                                 <button className="sugerencia-submit" type="submit">
-                                    Enviar sugerencia
+                                    Enviar por WhatsApp
                                 </button>
                             </form>
 
                             {estado_envio && (
                                 <p className="sugerencia-status" role="status">
                                     {estado_envio}
+                                    {enlace_whatsapp && (
+                                        <>
+                                            {" "}
+                                            <a
+                                                href={enlace_whatsapp}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                Abrir WhatsApp
+                                            </a>
+                                        </>
+                                    )}
                                 </p>
                             )}
                         </div>

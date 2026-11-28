@@ -1,6 +1,11 @@
 import { nombreCategoria } from "../data/productos";
 
-function Navbar02({ categorias, categoriaActual, cambiarCategoria }) {
+function Navbar02({
+    categorias,
+    categoriaActual,
+    cambiarCategoria,
+    cantidadFavoritos,
+}) {
     return (
         <nav className="category-nav" aria-label="Filtrar productos por categoría">
             <button
@@ -21,6 +26,18 @@ function Navbar02({ categorias, categoriaActual, cambiarCategoria }) {
             >
                 Ofertas
             </button>
+            {(cantidadFavoritos > 0 || categoriaActual === "favoritos") && (
+                <button
+                    className={`category-nav__favorites ${
+                        categoriaActual === "favoritos" ? "active" : ""
+                    }`}
+                    type="button"
+                    aria-pressed={categoriaActual === "favoritos"}
+                    onClick={() => cambiarCategoria("favoritos")}
+                >
+                    <span aria-hidden="true">♥</span> Favoritos ({cantidadFavoritos})
+                </button>
+            )}
             {categorias.map((categoria) => (
                 <button
                     className={categoriaActual === categoria ? "active" : ""}

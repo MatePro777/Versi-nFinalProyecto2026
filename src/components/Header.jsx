@@ -12,6 +12,9 @@ function Header({
   total,
   finalizarCompra,
   mensajeCompra,
+  enlaceWhatsApp,
+  cliente,
+  cambiarDatos,
 }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const cantidadProductos = carrito.reduce(
@@ -83,6 +86,9 @@ function Header({
               cerrar={() => setMenuAbierto(false)}
               finalizarCompra={finalizarCompra}
               mensajeCompra={mensajeCompra}
+              enlaceWhatsApp={enlaceWhatsApp}
+              cliente={cliente}
+              cambiarDatos={cambiarDatos}
             />
           </aside>
         </>

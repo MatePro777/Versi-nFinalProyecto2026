@@ -2,14 +2,40 @@ import { useState } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import AccesoCliente from "./components/AccesoCliente";
 import Catalogo from "./pages/Catalogo";
 import Home from "./pages/Home";
 import { precioConOferta } from "./data/productos";
+import { abrirChatWhatsApp, crearEnlaceWhatsApp } from "./utils/whatsapp";
+
+const telefonoWhatsApp = "525567364194";
 
 function App() {
     const [paginaActual, setPaginaActual] = useState("home");
     const [carrito, setCarrito] = useState([]);
+    const [favoritos, setFavoritos] = useState([]);
     const [mensajeCompra, setMensajeCompra] = useState("");
+    const [enlaceWhatsApp, setEnlaceWhatsApp] = useState("");
+    const [cliente, setCliente] = useState(() => {
+        const nombre = window.localStorage.getItem("el-lirio-nombre") || "";
+        const direccion = window.localStorage.getItem("el-lirio-direccion") || "";
+        return nombre && direccion ? { nombre, direccion } : null;
+    });
+    const [editarCliente, setEditarCliente] = useState(false);
+
+    function guardarCliente(datosCliente) {
+        try {
+            window.localStorage.setItem("el-lirio-nombre", datosCliente.nombre);
+            window.localStorage.setItem("el-lirio-direccion", datosCliente.direccion);
+            setCliente(datosCliente);
+            setEditarCliente(false);
+        } catch (error) {
+            console.error("No se pudieron guardar los datos del cliente.", error);
+            return "No se pudieron guardar tus datos. Revisa la configuración del navegador e inténtalo de nuevo.";
+        }
+
+        return "";
+    }
 
     function agregarProducto(producto) {
         if (!producto.disponible) return;
@@ -29,11 +55,42 @@ function App() {
         });
     }
 
+    function alternarFavorito(id) {
+        setFavoritos((actuales) =>
+            actuales.includes(id)
+                ? actuales.filter((favoritoId) => favoritoId !== id)
+                : [...actuales, id]
+        );
+    }
+
     function finalizarCompra() {
         if (carrito.length === 0 || carrito.some((item) => !item.disponible)) return;
 
-        setCarrito([]);
-        setMensajeCompra("¡Compra realizada! Gracias por apoyar a EL LIRIO.");
+        const detallePedido = carrito
+            .map((item) => {
+                const precio = precioConOferta(item);
+                return `${item.cantidad} x ${item.nombre} - $${precio.toFixed(2)} c/u = $${(precio * item.cantidad).toFixed(2)}`;
+            })
+            .join("\n");
+        const mensaje = [
+            "Hola, quiero hacer este pedido:",
+            "",
+            detallePedido,
+            "",
+            `Total: $${total.toFixed(2)}`,
+            `Nombre: ${cliente.nombre}`,
+            `Direccion de entrega: ${cliente.direccion}`,
+        ].join("\n");
+        const urlWhatsApp = crearEnlaceWhatsApp(telefonoWhatsApp, mensaje);
+        setEnlaceWhatsApp(urlWhatsApp);
+        if (!abrirChatWhatsApp(urlWhatsApp)) {
+            setMensajeCompra(
+                "El navegador bloqueó la ventana de WhatsApp. Permite las ventanas emergentes e inténtalo de nuevo."
+            );
+            return;
+        }
+
+        setMensajeCompra("WhatsApp se abrió con tu pedido escrito. Revísalo y pulsa Enviar.");
     }
 
     function aumentar(id) {
@@ -63,6 +120,15 @@ function App() {
         0
     );
 
+    if (!cliente || editarCliente) {
+        return (
+            <AccesoCliente
+                cliente={cliente}
+                guardarCliente={guardarCliente}
+            />
+        );
+    }
+
     return (
         <div className="app">
             <Header
@@ -75,6 +141,9 @@ function App() {
                 total={total}
                 finalizarCompra={finalizarCompra}
                 mensajeCompra={mensajeCompra}
+                enlaceWhatsApp={enlaceWhatsApp}
+                cliente={cliente}
+                cambiarDatos={() => setEditarCliente(true)}
             />
             
             <main>
@@ -82,11 +151,15 @@ function App() {
                     <Home cambiarPagina={setPaginaActual} />
                 )}
                 {paginaActual === "catalogo" && (
-                    <Catalogo agregarProducto={agregarProducto} />
+                    <Catalogo
+                        agregarProducto={agregarProducto}
+                        favoritos={favoritos}
+                        alternarFavorito={alternarFavorito}
+                    />
                 )}
             </main>
             
-            <Footer />
+            <Footer telefonoWhatsApp={telefonoWhatsApp} />
         </div>
     );
 }

@@ -3,8 +3,9 @@ import producto, { categorias } from "../data/productos";
 import ProductCard from "../components/ProductCard";
 import Navbar02 from "../components/Navbar02";
 import Seccion from "../components/Seccion";
+import BuscadorProductos from "../components/BuscadorProductos";
 
-function Catalogo({ agregarProducto }) {
+function Catalogo({ agregarProducto, favoritos, alternarFavorito }) {
     const [busqueda, setBusqueda] = useState("");
     const [categoriaActual, setCategoriaActual] = useState("todas");
     const productosFiltrados = useMemo(() => {
@@ -23,11 +24,13 @@ function Catalogo({ agregarProducto }) {
                 categoriaActual === "todas" ||
                 (categoriaActual === "ofertas"
                     ? Boolean(item.oferta)
-                    : item.categoria === categoriaActual);
+                    : categoriaActual === "favoritos"
+                        ? favoritos.includes(item.id)
+                        : item.categoria === categoriaActual);
 
             return coincideCategoria && textoProducto.includes(termino);
         });
-    }, [busqueda, categoriaActual]);
+    }, [busqueda, categoriaActual, favoritos]);
 
     return (
         <section className="catalogo">
@@ -37,26 +40,24 @@ function Catalogo({ agregarProducto }) {
             />
 
             <div className="catalogo-tools">
-                <label className="search-field">
-                    <span aria-hidden="true">⌕</span>
-                    <input
-                        type="search"
-                        value={busqueda}
-                        onChange={(evento) => setBusqueda(evento.target.value)}
-                        placeholder="Buscar productos..."
-                        aria-label="Buscar productos"
-                    />
-                </label>
+                <BuscadorProductos
+                    busqueda={busqueda}
+                    cambiarBusqueda={setBusqueda}
+                />
             </div>
 
             <Navbar02
                 categorias={categorias}
                 categoriaActual={categoriaActual}
                 cambiarCategoria={setCategoriaActual}
+                cantidadFavoritos={favoritos.length}
             />
 
             {categoriaActual === "ofertas" && (
                 <p className="offers-intro">Estos son los productos en oferta del día</p>
+            )}
+            {categoriaActual === "favoritos" && (
+                <p className="favorites-intro">Tus productos guardados para encontrarles rápido.</p>
             )}
 
             <div className="productos-grid" aria-live="polite">
@@ -66,11 +67,15 @@ function Catalogo({ agregarProducto }) {
                             key={prod.id}
                             producto={prod}
                             agregarProducto={agregarProducto}
+                            esFavorito={favoritos.includes(prod.id)}
+                            alternarFavorito={alternarFavorito}
                         />
                     ))
                 ) : (
                     <p className="no-results">
-                        No encontramos productos con esos filtros. Intenta con otra búsqueda.
+                        {categoriaActual === "favoritos"
+                            ? "Aún no tienes favoritos. Presiona el corazón de un producto para guardarlo aquí."
+                            : "No encontramos productos con esos filtros. Intenta con otra búsqueda."}
                     </p>
                 )}
             </div>
